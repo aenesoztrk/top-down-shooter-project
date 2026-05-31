@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/ahmetenesozturk/Desktop/C++ Projects/top-down-shooter-project/build",
+  "command": "/usr/bin/c++  -isystem /opt/homebrew/include -std=gnu++17 -arch arm64 -o CMakeFiles/TopDownShooter.dir/main.cpp.o -c \"/Users/ahmetenesozturk/Desktop/C++ Projects/top-down-shooter-project/main.cpp\"",
+  "file": "/Users/ahmetenesozturk/Desktop/C++ Projects/top-down-shooter-project/main.cpp",
+  "output": "CMakeFiles/TopDownShooter.dir/main.cpp.o"
+}
+]

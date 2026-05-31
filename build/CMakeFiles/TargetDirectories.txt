@@ -1,0 +1,3 @@
+/Users/ahmetenesozturk/Desktop/C++ Projects/top-down-shooter-project/build/CMakeFiles/TopDownShooter.dir
+/Users/ahmetenesozturk/Desktop/C++ Projects/top-down-shooter-project/build/CMakeFiles/edit_cache.dir
+/Users/ahmetenesozturk/Desktop/C++ Projects/top-down-shooter-project/build/CMakeFiles/rebuild_cache.dir
