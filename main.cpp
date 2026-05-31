@@ -38,16 +38,37 @@ public:
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Top-Down Shooter");
-    window.setFramerateLimit(60); // 60 fps
+    window.setFramerateLimit(60);
+
+    std::vector<Bullet> bullets;
+
+    sf::Vector2f spawnPosition = {400.0f, 300.0f};
+    float testAngle = 0.0f;
 
     while (window.isOpen()) {
         while (const std::optional<sf::Event> event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
+
+            if (event->is<sf::Event::MouseButtonPressed>()) {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                    bullets.push_back(Bullet(spawnPosition, testAngle));
+                    testAngle += 15.0f;
+                }
+            }
+        }
+
+        for (auto& bullet : bullets) {
+            bullet.update();
         }
 
         window.clear(sf::Color(20, 20, 20));
+
+        for (auto& bullet : bullets) {
+            bullet.draw(window);
+        }
+
         window.display();
     }
     return 0;
