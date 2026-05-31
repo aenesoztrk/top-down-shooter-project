@@ -93,11 +93,11 @@ private:
   float speed;
 
 public:
-  Enemy(sf::Vector2f position) {
-    speed = 2.0f;
+  Enemy(Vector2f position, float speedMultiplier) {
+    speed = 2.0f * speedMultiplier;
 
     shape.setRadius(15.0f);
-    shape.setFillColor(sf::Color::Red);
+    shape.setFillColor(Color::Red);
     shape.setOrigin({15.0f, 15.0f});
     shape.setPosition(position);
   }
@@ -119,14 +119,20 @@ public:
 
   sf::Vector2f getPosition() const { return shape.getPosition(); }
 };
+
 int main() {
-  sf::RenderWindow window(sf::VideoMode({800, 600}), "Top-Down Shooter");
+  sf::RenderWindow window(sf::VideoMode({800, 600}),
+                          "Top-Down Shooter - Ahmet Enes Ozturk");
   window.setFramerateLimit(60);
+  srand(static_cast<unsigned int>(time(0)));
 
   Player player;
   std::vector<Bullet> bullets;
+  std::vector<Enemy> enemies;
 
-  Enemy testEnemy({700.0f, 300.0f});
+  int currentWave = 0;
+  int enemiesToSpawn = 0;
+  float waveSpeedMultiplier = 1.0f;
 
   while (window.isOpen()) {
     while (const std::optional<sf::Event> event = window.pollEvent()) {
@@ -140,20 +146,54 @@ int main() {
       }
     }
 
+
+    if (enemies.empty()) {
+      currentWave++;
+      enemiesToSpawn = currentWave * 3;
+      waveSpeedMultiplier += 0.2f;
+
+      for (int i = 0; i < enemiesToSpawn; i++) {
+        float randomY = static_cast<float>(rand() % 550 + 25);
+        enemies.push_back(Enemy({850.0f + (i * 40), randomY}, waveSpeedMultiplier));
+      }
+      std::cout << "Dalga: " << currentWave << " | Dusmanlar Yolda!"
+                << std::endl;
+    }
+
+
     player.update(window);
-
-    testEnemy.update(player.getPosition());
-
+    for (auto &enemy : enemies)
+      enemy.update(player.getPosition());
     for (auto &bullet : bullets)
       bullet.update();
 
-    window.clear(sf::Color(20, 20, 20));
+    for (size_t b = 0; b < bullets.size();) {
+      bool bulletHit = false;
+      for (size_t e = 0; e < enemies.size();) {
+        sf::Vector2f diff = bullets[b].getPosition() - enemies[e].getPosition();
+        float distance = std::sqrt(diff.x * diff.x + diff.y * diff.y);
 
+        if (distance < 20.0f) {
+          enemies.erase(enemies.begin() + e);
+          bulletHit = true;
+          break;
+        } else {
+          e++;
+        }
+      }
+      if (bulletHit) {
+        bullets.erase(bullets.begin() + b);
+      } else {
+        b++;
+      }
+    }
+
+    window.clear(sf::Color(20, 20, 20));
     player.draw(window);
-    testEnemy.draw(window);
+    for (auto &enemy : enemies)
+      enemy.draw(window);
     for (auto &bullet : bullets)
       bullet.draw(window);
-
     window.display();
   }
   return 0;
